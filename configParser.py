@@ -1,7 +1,7 @@
 import json
 from typing import Dict
 
-from types import Route, Default_response
+from localTypes import Route, Default_response, RouteError, CommandBody
 
 
 class Config:
@@ -53,8 +53,24 @@ class Config:
             json_content: Dict = json.load(file)
         cls.HOST = json_content.get("host") or ""
         cls.PORT = json_content.get("port") or 9999
-
+        cls._parse_command(json_content.get("routes"))
 
     @staticmethod
     def _parse_command(routes: Route) -> Route:
-        pass
+        for key, value in routes.items():
+            value_keys = list(value.keys())
+            if "method" not in value_keys:
+                routes[key]["method"] = "GET"
+            if "params" not in value_keys:
+                routes[key]["params"] = []
+            if "commands" not in value_keys or routes[key]["commands"] == []:
+                raise RouteError("At least one command is required")
+
+            command_list: CommandBody
+            for index, command_list in enumerate(routes[key]["commands"]):
+                key_list = list(command_list.keys())
+                if "command" not in key_list or command_list["command"] in ["", None]:
+                    raise RouteError("A command is required")
+                # TODO: fill in default values for the other command definitions
+
+
