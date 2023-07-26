@@ -1,22 +1,36 @@
-from typing import Dict, Union, List, Literal
+from typing import Dict, Union, List, Literal, TypedDict
 
-CommandBody = Dict[
-            Literal[
-                "command",
-                "stdin",
-                "pipe_to_stdin",
-                "expected_return_code",
-                "return_stderr_on_error",
-                "return_stdout"
-            ], Union[str, bool, int, None]]
 
-Route = Dict[str, Dict[
-    Literal["method", "params", "commands"], Union[
-        str, List[str], List[CommandBody]]
-]]
+class CommandBody(TypedDict):
+    command: str
+    stdin: Union[None, bool]
+    pipe_to_stdin: Union[None, bool]
+    expected_return_code: int
+    return_stderr_on_error: bool
 
-Default_response = Dict[str, Dict[Literal["type", "text", "location", "mime_type"], str]]
+
+class RouteBody(TypedDict):
+    method: str
+    params: Union[None, List[str]]
+    commands: List[CommandBody]
+
+
+Route = Dict[str, RouteBody]
+
+
+class DefaultResponseBody(TypedDict):
+    type: Literal["string", "file"]
+    text: str
+    location: str
+    mime_type: str
+
+
+Default_response = Dict[str, DefaultResponseBody]
 
 
 class RouteError(Exception):
+    pass
+
+
+class DefaultResponseError(Exception):
     pass
