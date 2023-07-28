@@ -7,44 +7,7 @@ from localTypes import Route, Default_response, RouteError, DefaultResponseError
 class Config:
     HOST: str = ""
     PORT: int = 9999
-
-    # Example:
-    # "routes": {
-    #     "/hello": {
-    #         "method": "GET",
-    #         "params": ["message"],
-    #         "commands": [
-    #           {
-    #               "command": "echo {message}",
-    #               "stdin": null,
-    #               "pipe_to_stdin": true,
-    #               "expected_return_code": 0,
-    #               "return_stderr_on_error": true
-    #           },
-    #           {
-    #               "command": "base64",
-    #               "stdin": null,
-    #               "pipe_to_stdin": false,
-    #               "expected_return_code": 0,
-    #               "return_stdout": true
-    #           }
-    #         ]
-    #     }
-    # }
     ROUTES: Route = dict()
-
-    # Example:
-    # "default_responses": {
-    #     "404": {
-    #         "type": "string",
-    #         "text": "This path was not found"
-    #     },
-    #     "500": {
-    #         "type": "file",
-    #         "location": "500.txt",
-    #         "mime_type": "text/plain"
-    #     }
-    # }
     DEFAULT_RESPONSES: Default_response = dict()
 
     @classmethod

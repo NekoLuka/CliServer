@@ -3,10 +3,15 @@ import subprocess
 
 from configParser import Config
 from wsgiref.simple_server import make_server
-from wsgiref.types import StartResponse
-from typing import Dict, Any, Iterable, Union, List, Tuple
+from typing import Dict, Any, Iterable, Union, List, Tuple, Callable
 from defaultResponse import DefaultResponse
 from localTypes import CommandBody
+
+# Try to import wsgiref.types or define the type custom if the import fails
+try:
+    from wsgiref.types import StartResponse
+except ImportError:
+    StartResponse = Callable[[str, List[Tuple[str, str]]], None]
 
 c = Config()
 c.init_config("default_config.json")
