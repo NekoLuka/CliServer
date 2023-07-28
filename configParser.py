@@ -64,6 +64,8 @@ class Config:
                 routes[key]["method"] = "GET"
             if "params" not in value_keys:
                 routes[key]["params"] = []
+            if "return_stdout" not in value_keys:
+                routes[key]["return_stdout"] = True
             if "commands" not in value_keys or routes[key]["commands"] == []:
                 raise RouteError("At least one command is required")
 

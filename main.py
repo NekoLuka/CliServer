@@ -4,7 +4,7 @@ import subprocess
 from configParser import Config
 from wsgiref.simple_server import make_server
 from wsgiref.types import StartResponse
-from typing import Dict, Any, Iterable, Union, List
+from typing import Dict, Any, Iterable, Union, List, Tuple
 from defaultResponse import DefaultResponse
 from localTypes import CommandBody
 
@@ -14,12 +14,41 @@ c.init_config("default_config.json")
 defaultResponse = DefaultResponse(c.DEFAULT_RESPONSES)
 
 
-def execute_commands(commands: List[CommandBody], use_params: bool = False, params: Dict[str, str] = None) -> (bool, Union[str, None]):
+def execute_commands(
+        commands: List[CommandBody],
+        use_params: bool = False,
+        params: Dict[str, str] = None,
+        return_stdout: bool = True
+) -> Tuple[bool, Union[str, None]]:
     stdin = None
+    stdout = None
     for i in commands:
-        stdin = i["stdin"]
-        p = subprocess.Popen(i["command"].format(**params) if use_params else i["command"])
-
+        # Prepare command
+        p = subprocess.Popen(
+            i["command"].format(**params) if use_params else i["command"],
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            stdin=subprocess.PIPE,
+            text=True
+        )
+        # Execute command and grab the correct stdin var
+        l_stdout, stderr = p.communicate(params.get(i["stdin"]) if use_params and i["stdin"] is not None else stdin)
+        # Check if the return code matches the expected one and if not, return an error
+        if p.returncode != i["expected_return_code"]:
+            if i["return_stderr_on_error"]:
+                return False, stderr
+            return False, None
+        # Check if stdout from this command needs to be piped to the next one
+        if i["pipe_to_stdin"]:
+            stdin = l_stdout
+        else:
+            stdin = None
+        stdout = l_stdout
+    # Return the successful results
+    if return_stdout:
+        return True, stdout
+    return True, None
 
 
 def app(environ: Dict[str, Any], start_response: StartResponse) -> Iterable[bytes]:
@@ -33,17 +62,18 @@ def app(environ: Dict[str, Any], start_response: StartResponse) -> Iterable[byte
     route = c.ROUTES.get(path)
     if not route:
         return defaultResponse.call_error("404 not found", start_response)
-    if route.get("method") != method:
+    if route["method"] != method:
         return defaultResponse.call_error("405 method not allowed", start_response, [("allow", route.get("method"))])
     if len(route["params"]) > 0:
         pass  # TODO: parse query string and body to find params
-    r = subprocess.Popen("echo hello", shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-    while True:
-        if r.poll() is not None:
-            break
-    print(r.returncode)
-    print(r.stdout.read())
+    success, value = execute_commands(route["commands"], False, None, route["return_stdout"])
+    if success:
+        start_response("200 ok", [])
+        return [value.encode()] if value else []
+    start_response("500 internal serer error", [])
+    return [value.encode()] if value else []
 
 
-with make_server(c.HOST, c.PORT, app) as server:
-    server.serve_forever()
+if __name__ == "__main__":
+    with make_server(c.HOST, c.PORT, app) as server:
+        server.serve_forever()

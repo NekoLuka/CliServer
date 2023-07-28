@@ -1,6 +1,6 @@
 from localTypes import Default_response
 from wsgiref.types import StartResponse
-from typing import Dict, Any, Iterable, Union, Tuple, List
+from typing import Iterable, Tuple, List
 
 
 class DefaultResponse:
@@ -20,5 +20,3 @@ class DefaultResponse:
 
         start_response(error_code, headers or [])
         return [body]
-
-

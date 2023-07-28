@@ -4,21 +4,23 @@
   "routes": {
     "/hello": {
       "method": "GET",
-      "params": ["message"],
+      "params": [],
+      "return_stdout": true,
       "commands": [
         {
-          "command": "echo {message}",
+          "command": "echo hello world",
           "stdin": null,
           "pipe_to_stdin": true,
           "expected_return_code": 0,
           "return_stderr_on_error": true
-        },
+        }
+      ]
+    },
+    "/date": {
+      "method": "GET",
+      "commands": [
         {
-          "command": "base64",
-          "stdin": null,
-          "pipe_to_stdin": false,
-          "expected_return_code": 0,
-          "return_stdout": true
+          "command": "date /t"
         }
       ]
     }
@@ -26,7 +28,7 @@
   "default_responses": {
     "404": {
       "type": "string",
-      "text": "This path was not found"
+      "text": "This path was not found :)"
     },
     "500": {
       "type": "file",
