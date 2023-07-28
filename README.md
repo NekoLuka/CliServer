@@ -6,7 +6,7 @@ A webserver that can be easily configured to run commands in a shell with parame
 
 - *nix or windows system
 - Python 3.8+ 
-- 30 MB of free RAM (for ~20 endpoints, but depends on the amount of ram used by called programs)
+- 30 MB of free RAM (but depends on the amount of ram used by called programs and the used WSGI server)
 - 1 CPU core (depending on the programs that are called)
 
 ### Configuration
@@ -49,6 +49,7 @@ A webserver that can be easily configured to run commands in a shell with parame
     }
 }
 ```
+The first command is equal to `echo hello world | base64`.
 
 #### General explanation  
 
