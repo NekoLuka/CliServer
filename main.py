@@ -1,5 +1,6 @@
 import io
 import subprocess
+import urllib.parse
 
 from configParser import Config
 from wsgiref.simple_server import make_server
@@ -22,7 +23,7 @@ defaultResponse = DefaultResponse(c.DEFAULT_RESPONSES)
 def execute_commands(
         commands: List[CommandBody],
         use_params: bool = False,
-        params: Dict[str, str] = None,
+        params: Dict[str, List[str]] = None,
         return_stdout: bool = True
 ) -> Tuple[bool, Union[str, None]]:
     stdin = None
@@ -64,14 +65,17 @@ def app(environ: Dict[str, Any], start_response: StartResponse) -> Iterable[byte
     content_length: Union[str, int] = environ.get("CONTENT_LENGTH") or 0
     body: io.BufferedReader = environ.get("wsgi.input")
 
+    param_dict: Dict[str, List[str]] = dict()
+
     route = c.ROUTES.get(path)
     if not route:
         return defaultResponse.call_error("404 not found", start_response)
     if route["method"] != method:
         return defaultResponse.call_error("405 method not allowed", start_response, [("allow", route.get("method"))])
     if len(route["params"]) > 0:
-        pass  # TODO: parse query string and body to find params
-    success, value = execute_commands(route["commands"], False, None, route["return_stdout"])
+        param_dict = urllib.parse.parse_qs(query)
+        # TODO: parse body to find params
+    success, value = execute_commands(route["commands"], len(route["params"]) > 0, param_dict, route["return_stdout"])
     if success:
         start_response("200 ok", [])
         return [value.encode()] if value else []
