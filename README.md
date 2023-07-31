@@ -19,10 +19,11 @@ A webserver that can be easily configured to run commands in a shell with parame
     "routes": {
         "/hello": {
             "method": "GET",
+            "params": ["message"],
             "return_stdout": true,
             "commands": [
                 {
-                    "command": "echo hello world",
+                    "command": "echo {message}",
                     "pipe_to_stdin": true,
                     "expected_return_code": 0,
                     "return_stderr_on_error": true
@@ -49,7 +50,7 @@ A webserver that can be easily configured to run commands in a shell with parame
     }
 }
 ```
-The first command is equal to `echo hello world | base64`.
+The first command is equal to `echo {message} | base64`.
 
 #### General explanation  
 
@@ -61,6 +62,7 @@ The first command is equal to `echo hello world | base64`.
 #### Routes explanation
 
 - method (str): What HTTP method this route listens to (default: GET).
+- params (list): A list of strings which are keys found in either the query string or request body, whose value is passed to the command (note: values from duplicate keys are concatenated with spaces).
 - return_stdout (bool): If the output of STDOUT should be returned when the command chain finishes successfully (default: true).
 - commands (list): A list of objects containing the definitions for the commands that need to be executed (at least one route is required).
 

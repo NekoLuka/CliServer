@@ -23,7 +23,7 @@ defaultResponse = DefaultResponse(c.DEFAULT_RESPONSES)
 def execute_commands(
         commands: List[CommandBody],
         use_params: bool = False,
-        params: Dict[str, List[str]] = None,
+        params: Dict[str, str] = None,
         return_stdout: bool = True
 ) -> Tuple[bool, Union[str, None]]:
     stdin = None
@@ -65,7 +65,7 @@ def app(environ: Dict[str, Any], start_response: StartResponse) -> Iterable[byte
     content_length: Union[str, int] = environ.get("CONTENT_LENGTH") or 0
     body: io.BufferedReader = environ.get("wsgi.input")
 
-    param_dict: Dict[str, List[str]] = dict()
+    param_dict: Dict[str, str] = dict()
 
     route = c.ROUTES.get(path)
     if not route:
@@ -73,7 +73,7 @@ def app(environ: Dict[str, Any], start_response: StartResponse) -> Iterable[byte
     if route["method"] != method:
         return defaultResponse.call_error("405 method not allowed", start_response, [("allow", route.get("method"))])
     if len(route["params"]) > 0:
-        param_dict = urllib.parse.parse_qs(query)
+        param_dict = {key: " ".join(value) for key, value in urllib.parse.parse_qs(query)}
         # TODO: parse body to find params
     success, value = execute_commands(route["commands"], len(route["params"]) > 0, param_dict, route["return_stdout"])
     if success:
