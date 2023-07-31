@@ -34,7 +34,7 @@ def execute_commands(
             try:
                 command = i["command"].format(**params)
             except KeyError as e:
-                return 400, str(e)
+                return 400, f"{str(e)} was expected but not found"
         else:
             command = i["command"]
 
