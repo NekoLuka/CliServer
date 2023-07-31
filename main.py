@@ -82,7 +82,7 @@ def app(environ: Dict[str, Any], start_response: StartResponse) -> Iterable[byte
     if route["method"] != method:
         return defaultResponse.call_error("405 method not allowed", start_response, [("allow", route.get("method"))])
     if len(route["params"]) > 0:
-        param_dict = {key: " ".join(value) for key, value in urllib.parse.parse_qs(query)}
+        param_dict = {key: " ".join(value) for key, value in urllib.parse.parse_qs(query).items()}
         # TODO: parse body to find params
     res_code, value = execute_commands(route["commands"], len(route["params"]) > 0, param_dict, route["return_stdout"])
     if res_code == 204:
