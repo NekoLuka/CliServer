@@ -25,13 +25,22 @@ def execute_commands(
         use_params: bool = False,
         params: Dict[str, str] = None,
         return_stdout: bool = True
-) -> Tuple[bool, Union[str, None]]:
+) -> Tuple[int, Union[str, None]]:
     stdin = None
     stdout = None
     for i in commands:
+        # Check if all required parameters are present
+        if use_params:
+            try:
+                command = i["command"].format(**params)
+            except KeyError as e:
+                return 400, str(e)
+        else:
+            command = i["command"]
+
         # Prepare command
         p = subprocess.Popen(
-            i["command"].format(**params) if use_params else i["command"],
+            command,
             shell=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -43,8 +52,8 @@ def execute_commands(
         # Check if the return code matches the expected one and if not, return an error
         if p.returncode != i["expected_return_code"]:
             if i["return_stderr_on_error"]:
-                return False, stderr
-            return False, None
+                return 500, stderr
+            return 500, None
         # Check if stdout from this command needs to be piped to the next one
         if i["pipe_to_stdin"]:
             stdin = l_stdout
@@ -53,8 +62,8 @@ def execute_commands(
         stdout = l_stdout
     # Return the successful results
     if return_stdout:
-        return True, stdout
-    return True, None
+        return 200, stdout
+    return 204, None
 
 
 def app(environ: Dict[str, Any], start_response: StartResponse) -> Iterable[bytes]:
@@ -75,11 +84,15 @@ def app(environ: Dict[str, Any], start_response: StartResponse) -> Iterable[byte
     if len(route["params"]) > 0:
         param_dict = {key: " ".join(value) for key, value in urllib.parse.parse_qs(query)}
         # TODO: parse body to find params
-    success, value = execute_commands(route["commands"], len(route["params"]) > 0, param_dict, route["return_stdout"])
-    if success:
+    res_code, value = execute_commands(route["commands"], len(route["params"]) > 0, param_dict, route["return_stdout"])
+    if res_code == 204:
+        start_response("204 no content", [])
+    elif res_code == 400:
+        start_response("400 bad request", [])
+    elif res_code == 500:
+        start_response("500 internal serer error", [])
+    else:
         start_response("200 ok", [])
-        return [value.encode()] if value else []
-    start_response("500 internal serer error", [])
     return [value.encode()] if value else []
 
 
