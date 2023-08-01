@@ -1,4 +1,5 @@
 import io
+import json
 import subprocess
 import urllib.parse
 
@@ -15,7 +16,7 @@ except ImportError:
     StartResponse = Callable[[str, List[Tuple[str, str]]], None]
 
 c = Config()
-c.init_config("default_config.json")
+c.init_config("example_config.json")
 
 defaultResponse = DefaultResponse(c.DEFAULT_RESPONSES)
 
@@ -83,7 +84,8 @@ def app(environ: Dict[str, Any], start_response: StartResponse) -> Iterable[byte
         return defaultResponse.call_error("405 method not allowed", start_response, [("allow", route.get("method"))])
     if len(route["params"]) > 0:
         param_dict = {key: " ".join(value) for key, value in urllib.parse.parse_qs(query).items()}
-        # TODO: parse body to find params
+        if content_type == "application/json" and content_length > 0:
+            param_dict = {**param_dict, **json.load(body)}
     res_code, value = execute_commands(route["commands"], len(route["params"]) > 0, param_dict, route["return_stdout"])
     if res_code == 204:
         start_response("204 no content", [])
