@@ -88,3 +88,4 @@ The first command is equal to `echo {message} | base64`.
 - Add more accepted request body types.
 - Add files for accepted default responses.
 - Support to run commands as different users on the system.
+- Sanitize input to prevent command injections.
