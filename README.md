@@ -1,13 +1,16 @@
 # CliServer
-A webserver that can be easily configured to run commands in a shell with parameters and return stdout or stderr
+An API that turns your shell into a powerful and customisable backend with just one simple configuration file.
 
 ## Deployment and configuration
 ### Requirements
 
 - *nix or windows system
-- Python 3.8+ 
+- Python 3.6+ 
 - 30 MB of free RAM (but depends on the amount of ram used by called programs and the used WSGI server)
 - 1 CPU core (depending on the programs that are called)
+
+### Usage
+To start the program just type `python cliserver.py /path/to/config/file.json`
 
 ### Configuration
 
@@ -69,7 +72,8 @@ The first command is equal to `echo {message} | base64`.
 #### Commands options
 
 - command (str): The command to execute (required).
-- pipe_to_stdin (bool): Signal if STDOUT from the current command should be inserted in STDIN of the next command (default: false).
+- stdin (string): The name of the parameter that should be piped to STDIN (don't use if you used pipe_to_stdin in the previous command).
+- pipe_to_stdin (bool): Signal if STDOUT from the current command should be piped to STDIN of the next command (default: false).
 - expected_return_code (int): The expected return code to check against if the command failed or not (default: 0).
 - return_stderr_on_err (bool): If the output of STDERR should be returned when the command fails (default: true).
 
@@ -77,3 +81,10 @@ The first command is equal to `echo {message} | base64`.
 
 - type (string): A string literal that identifies to use the 'text' field to generate output for the code (required).
 - text (str): The text that is put in the response body (required).
+
+## Roadmap
+
+- Put the program into a docker image.
+- Add more accepted request body types.
+- Add files for accepted default responses.
+- Support to run commands as different users on the system.

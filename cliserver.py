@@ -2,6 +2,7 @@ import io
 import json
 import subprocess
 import urllib.parse
+import argparse
 
 from configParser import Config
 from wsgiref.simple_server import make_server
@@ -15,8 +16,12 @@ try:
 except ImportError:
     StartResponse = Callable[[str, List[Tuple[str, str]]], None]
 
+parser = argparse.ArgumentParser(prog="CliServer", description="Turn the command line into an API")
+parser.add_argument("filename")
+args = parser.parse_args()
+
 c = Config()
-c.init_config("example_config.json")
+c.init_config(args.filename)
 
 defaultResponse = DefaultResponse(c.DEFAULT_RESPONSES)
 
