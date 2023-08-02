@@ -12,6 +12,8 @@ An API that turns your shell into a powerful and customisable backend with just 
 ### Usage
 To start the program just type `python cliserver.py /path/to/config/file.json`
 
+To start the program using docker, run `docker run -p 9999:9999 -v /path/to/config/file.json:/config.json ghcr.io/NekoLuka/CliServer:main`
+
 ### Configuration
 
 #### Example:
