@@ -89,3 +89,5 @@ The first command is equal to `echo {message} | base64`.
 - Add files for accepted default responses.
 - Support to run commands as different users on the system.
 - Sanitize input to prevent command injections.
+- Add possible authentication to endpoints
+- Add testing cases
