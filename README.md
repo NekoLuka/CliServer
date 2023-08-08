@@ -10,9 +10,9 @@ An API that turns your shell into a powerful and customisable backend with just 
 - 1 CPU core (depending on the programs that are called)
 
 ### Usage
-To start the program just type `python cliserver.py /path/to/config/file.json`
+To start the program, run `python cliserver.py /path/to/config/file.json`
 
-To start the program using docker, run `docker run -p 9999:9999 -v /path/to/config/file.json:/config.json ghcr.io/NekoLuka/CliServer:main`
+To start the program using docker, run `docker run -p 9999:9999 -v /path/to/config/file.json:/config.json ghcr.io/nekoluka/cliserver:main`
 
 ### Configuration
 
@@ -84,6 +84,9 @@ The first command is equal to `echo {message} | base64`.
 - type (string): A string literal that identifies to use the 'text' field to generate output for the code (required).
 - text (str): The text that is put in the response body (required).
 
+## Testing
+To run all tests, run `python tests.py`
+
 ## Roadmap
 
 - Put the program into a docker image.
@@ -93,3 +96,4 @@ The first command is equal to `echo {message} | base64`.
 - Sanitize input to prevent command injections.
 - Add possible authentication to endpoints
 - Add testing cases
+- Add ctrl+C exit functionality
