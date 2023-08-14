@@ -8,6 +8,9 @@ name: Docker
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - '*.md'
+      - '*.txt'
     # Publish semver tags as releases.
 
 env:
