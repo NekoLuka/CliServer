@@ -97,3 +97,4 @@ To run all tests, run `python tests.py`
 - Add possible authentication to endpoints
 - Add testing cases
 - Add ctrl+C exit functionality
+- Static file serving
