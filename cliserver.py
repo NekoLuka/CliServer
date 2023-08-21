@@ -4,11 +4,12 @@ import subprocess
 import urllib.parse
 import argparse
 
+from commander import Commander
 from configParser import Config
 from wsgiref.simple_server import make_server
 from typing import Dict, Any, Iterable, Union, List, Tuple, Callable
-from defaultResponse import DefaultResponse
-from localTypes import CommandBody
+from localTypes import CommandBody, ResponseEnum
+from responder import Responder
 
 # Try to import wsgiref.types or define the type custom if the import fails
 try:
@@ -23,7 +24,7 @@ args = parser.parse_args()
 c = Config()
 c.init_config(args.filename)
 
-defaultResponse = DefaultResponse(c.DEFAULT_RESPONSES)
+responder = Responder(c.DEFAULT_RESPONSES)
 
 
 def execute_commands(
@@ -84,23 +85,16 @@ def app(environ: Dict[str, Any], start_response: StartResponse) -> Iterable[byte
 
     route = c.ROUTES.get(path)
     if not route:
-        return defaultResponse.call_error("404 not found", start_response)
+        return responder.respond(start_response, ResponseEnum.NotFound, None, None)
     if route["method"] != method:
-        return defaultResponse.call_error("405 method not allowed", start_response, [("allow", route.get("method"))])
+        return responder.respond(start_response, ResponseEnum.MethodNotAllowed, None, [("allow", route.get("method"))])
     if len(route["params"]) > 0:
         param_dict = {key: " ".join(value) for key, value in urllib.parse.parse_qs(query).items()}
         if content_type == "application/json" and content_length > 0:
             param_dict = {**param_dict, **json.load(body)}
-    res_code, value = execute_commands(route["commands"], len(route["params"]) > 0, param_dict, route["return_stdout"])
-    if res_code == 204:
-        start_response("204 no content", [])
-    elif res_code == 400:
-        start_response("400 bad request", [])
-    elif res_code == 500:
-        start_response("500 internal serer error", [])
-    else:
-        start_response("200 ok", [])
-    return [value.encode()] if value else []
+    commander = Commander(route["commands"], route["return_stdout"], len(route["params"]) > 0, param_dict)
+    status, value = commander.execute_commands()
+    return responder.respond(start_response, status, value, None)
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Dict, Union, List, Literal, TypedDict
 
 
@@ -5,8 +6,9 @@ class CommandBody(TypedDict):
     command: str
     stdin: Union[None, str]
     pipe_to_stdin: Union[None, bool]
-    expected_return_code: int
+    expected_return_code: Union[None, int]
     return_stderr_on_error: bool
+    stdout: Union[None, str]
 
 
 class RouteBody(TypedDict):
@@ -35,3 +37,16 @@ class RouteError(Exception):
 
 class DefaultResponseError(Exception):
     pass
+
+
+class MissingParameterError(Exception):
+    pass
+
+
+class ResponseEnum(Enum):
+    NoContent = 1
+    BadRequest = 2
+    InternalServerError = 3
+    OK = 4
+    NotFound = 5
+    MethodNotAllowed = 6

@@ -41,9 +41,10 @@ class Config:
                 if "pipe_to_stdin" not in key_list:
                     routes[key]["commands"][index]["pipe_to_stdin"] = False
                 if "expected_return_code" not in key_list:
-                    routes[key]["commands"][index]["expected_return_code"] = 0
+                    routes[key]["commands"][index]["expected_return_code"] = None
                 if "return_stderr_on_error" not in key_list:
                     routes[key]["commands"][index]["return_stderr_on_error"] = True
+                routes[key]["commands"][index]["stdout"] = None
         return routes
 
     @staticmethod
