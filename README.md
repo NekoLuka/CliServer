@@ -89,7 +89,7 @@ To run all tests, run `python tests.py`
 
 ## Roadmap
 
-- Put the program into a docker image.
+- Add conditional logic in commands.
 - Add more accepted request body types.
 - Add files for accepted default responses.
 - Support to run commands as different users on the system.
