@@ -33,8 +33,6 @@ def app(environ: Dict[str, Any], start_response: StartResponse) -> Iterable[byte
     content_length: Union[str, int] = environ.get("CONTENT_LENGTH") or 0
     body: io.BufferedReader = environ.get("wsgi.input")
 
-    param_dict: Dict[str, str] = dict()
-
     route = c.ROUTES.get(path)
     if not route:
         return responder.respond(start_response, ResponseEnum.NotFound, None, None)
@@ -42,6 +40,8 @@ def app(environ: Dict[str, Any], start_response: StartResponse) -> Iterable[byte
         return responder.respond(start_response, ResponseEnum.MethodNotAllowed, None, [("allow", route.get("method"))])
     if len(route["params"]) > 0:
         param_dict = merge_request_params(query, content_type, content_length, body)
+    else:
+        param_dict = dict()
     commander = Commander(route["commands"], route["return_stdout"], len(route["params"]) > 0, param_dict)
     status, value = commander.execute_commands()
     return responder.respond(start_response, status, value, None)
