@@ -1,4 +1,4 @@
-from configParser import Config
+from configparser import Config
 
 
 def test_backwards_compatibility_routes():

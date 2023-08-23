@@ -1,7 +1,7 @@
 import subprocess
 from typing import Dict, Union, List, Tuple
 
-from localTypes import CommandBody, MissingParameterError, UnexpectedReturnCodeError, ResponseEnum
+from localtypes import CommandBody, MissingParameterError, ResponseEnum
 
 
 class Commander:
@@ -16,7 +16,7 @@ class Commander:
     def get_correct_stdin(self, stdin_param: Union[str, None]) -> Union[str, None]:
         if self.use_params and stdin_param:
             return self.params.get(stdin_param)
-        if self.command_stack[-1]["pipe_to_stdin"]:
+        if len(self.command_stack) > 0 and self.command_stack[-1]["pipe_to_stdin"]:
             return self.command_stack[-1]["stdout"]
 
     def format_command(self, command: str) -> str:

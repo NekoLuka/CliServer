@@ -4,9 +4,10 @@
   "routes": {
     "/hello": {
       "method": "GET",
+      "params": ["message"],
       "commands": [
         {
-          "command": "echo hello world"
+          "command": "echo {message}"
         }
       ]
     },

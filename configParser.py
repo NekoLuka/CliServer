@@ -1,7 +1,7 @@
 import json
 from typing import Dict
 
-from localTypes import Route, Default_response, RouteError, DefaultResponseError
+from localtypes import Route, Default_response, RouteError, DefaultResponseError
 
 
 class Config:
