@@ -5,6 +5,8 @@ from commander import Commander
 from configparser import Config
 from wsgiref.simple_server import make_server
 from typing import Dict, Any, Iterable, Union, List, Tuple, Callable
+
+from inspector import inspector
 from localtypes import ResponseEnum
 from responder import Responder
 from params import merge_request_params
@@ -40,6 +42,9 @@ def app(environ: Dict[str, Any], start_response: StartResponse) -> Iterable[byte
         return responder.respond(start_response, ResponseEnum.MethodNotAllowed, None, [("allow", route.get("method"))])
     if len(route["params"]) > 0:
         param_dict = merge_request_params(query, content_type, content_length, body)
+        status, value = inspector(param_dict)
+        if status != ResponseEnum.OK:
+            return responder.respond(start_response, ResponseEnum.BadRequest, value, None)
     else:
         param_dict = dict()
     commander = Commander(route["commands"], route["return_stdout"], len(route["params"]) > 0, param_dict)
