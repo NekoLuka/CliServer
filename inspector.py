@@ -3,7 +3,7 @@ from typing import Dict
 from local_types import ResponseEnum
 
 
-def inspector(params: Dict[str, str]):
+def inspector(params: Dict[str, str]) -> [ResponseEnum, str]:
     error_string = "{symbol} is not allowed in commands"
     for value in params.values():
         if "&&" in value:
