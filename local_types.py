@@ -18,7 +18,15 @@ class RouteBody(TypedDict):
     commands: List[CommandBody]
 
 
+class ParsedRouteBody(TypedDict):
+    method: str
+    params: Union[None, List[str]]
+    return_stdout: bool
+    commands: List[CommandBody]
+
+
 Route = Dict[str, RouteBody]
+ParsedRoute = Dict[str, ParsedRouteBody]
 
 
 class DefaultResponseBody(TypedDict):

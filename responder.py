@@ -1,6 +1,6 @@
 from typing import Callable, List, Tuple
 
-from localtypes import ResponseEnum, Default_response
+from local_types import ResponseEnum, Default_response
 
 try:
     from wsgiref.types import StartResponse

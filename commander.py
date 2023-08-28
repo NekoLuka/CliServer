@@ -1,7 +1,7 @@
 import subprocess
 from typing import Dict, Union, List, Tuple
 
-from localtypes import CommandBody, MissingParameterError, ResponseEnum
+from local_types import CommandBody, MissingParameterError, ResponseEnum
 
 
 class Commander:

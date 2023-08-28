@@ -2,12 +2,12 @@ import io
 import argparse
 
 from commander import Commander
-from configparser import Config
+from config_parser import Config
 from wsgiref.simple_server import make_server
 from typing import Dict, Any, Iterable, Union, List, Tuple, Callable
 
 from inspector import inspector
-from localtypes import ResponseEnum
+from local_types import ResponseEnum
 from responder import Responder
 from params import merge_request_params
 

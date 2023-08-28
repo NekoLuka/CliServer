@@ -1,6 +1,6 @@
 from typing import Dict
 
-from localtypes import ResponseEnum
+from local_types import ResponseEnum
 
 
 def inspector(params: Dict[str, str]):
