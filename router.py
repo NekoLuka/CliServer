@@ -7,7 +7,7 @@ class Router:
     def __init__(self, config: ParsedRoute):
         self.config = config
 
-    def route(self, path: str, method: str) -> [ResponseEnum, Union[List[Tuple[str, str]], None, ParsedRouteBody]]:
+    def route(self, path: str, method: str) -> Tuple[ResponseEnum, Union[List[Tuple[str, str]], None, ParsedRouteBody]]:
         route = self.config.get(path)
         if not route:
             return ResponseEnum.NotFound, None

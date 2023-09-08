@@ -48,6 +48,8 @@ class Config:
             command["expected_return_code"] = None
         if "return_stderr_on_error" not in keys:
             command["return_stderr_on_error"] = True
+        if "condition" not in keys:
+            command["condition"] = None
         command["stdout"] = None
         return command
 

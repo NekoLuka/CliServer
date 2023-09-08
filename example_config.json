@@ -7,6 +7,7 @@
       "params": ["message"],
       "commands": [
         {
+          "condition": "{message} = hello",
           "command": "echo {message}"
         }
       ]

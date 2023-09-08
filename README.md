@@ -24,7 +24,7 @@ To start the program using docker, run `docker run -p 9999:9999 -v /path/to/conf
     "routes": {
         "/hello": {
             "method": "GET",
-            "params": ["message"],
+            "params": ["message", "encode"],
             "return_stdout": true,
             "commands": [
                 {
@@ -34,6 +34,7 @@ To start the program using docker, run `docker run -p 9999:9999 -v /path/to/conf
                     "return_stderr_on_error": true
                 },
                 {
+                    "condition": "1 -eq {encode}",
                     "command": "base64"
                 }
             ]
@@ -78,6 +79,7 @@ The first command is equal to `echo {message} | base64`.
 - pipe_to_stdin (bool): Signal if STDOUT from the current command should be piped to STDIN of the next command (default: false).
 - expected_return_code (int): The expected return code to check against if the command failed or not (default: 0).
 - return_stderr_on_err (bool): If the output of STDERR should be returned when the command fails (default: true).
+- condition (str): Add a condition that needs to be met to run the command. Use the 'test' command syntax.
 
 #### Default response options
 

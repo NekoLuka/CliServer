@@ -45,9 +45,9 @@ def app(environ: Dict[str, Any], start_response: StartResponse) -> Iterable[byte
         return responder.respond(start_response, status, None, value)
     if len(value["params"]) > 0:
         param_dict = merge_request_params(query, content_type, content_length, body)
-        status, value = inspector(param_dict)
+        status, error_value = inspector(param_dict)
         if status != ResponseEnum.OK:
-            return responder.respond(start_response, ResponseEnum.BadRequest, value, None)
+            return responder.respond(start_response, ResponseEnum.BadRequest, error_value, None)
     else:
         param_dict = dict()
     commander = Commander(value["commands"], value["return_stdout"], len(value["params"]) > 0, param_dict)
