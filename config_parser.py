@@ -62,6 +62,8 @@ class Config:
 
     @classmethod
     def _parse_routes(cls, routes: Route) -> ParsedRoute:
+        if routes is None:
+            return dict()
         return_routes: ParsedRoute = {}
         for key, value in routes.items():
             value = cls._enforce_mandatory_route_values(value)
@@ -78,6 +80,8 @@ class Config:
 
     @staticmethod
     def _parse_default_response(responses: Default_response) -> Default_response:
+        if responses is None:
+            return dict()
         for key, value in responses.items():
             try:
                 int(key)
