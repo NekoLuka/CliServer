@@ -50,7 +50,8 @@ def app(environ: Dict[str, Any], start_response: StartResponse) -> Iterable[byte
             return responder.respond(start_response, ResponseEnum.BadRequest, error_value, None)
     else:
         param_dict = dict()
-    commander = Commander(value["commands"], value["return_stdout"], len(value["params"]) > 0, param_dict)
+    commander = Commander(value["commands"], value["return_stdout"], len(value["params"]) > 0, param_dict,
+                          value["variables"])
     status, value = commander.execute_commands()
     return responder.respond(start_response, status, value, None)
 

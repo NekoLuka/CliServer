@@ -5,10 +5,13 @@
     "/hello": {
       "method": "GET",
       "params": ["message"],
+      "variables": {
+        "messages": "echo {message} | base64"
+      },
       "commands": [
         {
           "condition": "{message} = hello",
-          "command": "echo {message}"
+          "command": "echo {messages}"
         }
       ]
     },
