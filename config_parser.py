@@ -47,7 +47,7 @@ class Config:
         if "pipe_to_stdin" not in keys:
             command["pipe_to_stdin"] = False
         if "expected_return_code" not in keys:
-            command["expected_return_code"] = None
+            command["expected_return_code"] = 0
         if "return_stderr_on_error" not in keys:
             command["return_stderr_on_error"] = True
         if "condition" not in keys:

@@ -6,7 +6,7 @@ class CommandBody(TypedDict):
     command: str
     stdin: Union[None, str]
     pipe_to_stdin: Union[None, bool]
-    expected_return_code: Union[None, int]
+    expected_return_code: int
     return_stderr_on_error: bool
     condition: Union[None, str]
     stdout: Union[None, str]
