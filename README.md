@@ -100,3 +100,4 @@ To run all tests, run `python tests.py`
 - Add testing cases
 - Add ctrl+C exit functionality
 - Add static file serving
+- Add a killswitch to stop the command chain when a condition fails
