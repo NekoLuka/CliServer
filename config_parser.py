@@ -28,6 +28,8 @@ class Config:
             route["params"] = []
         if "return_stdout" not in keys:
             route["return_stdout"] = True
+        if "variables" not in keys:
+            route["variables"] = {}
         return route
 
     @staticmethod

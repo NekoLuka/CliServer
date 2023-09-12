@@ -71,6 +71,7 @@ The first command is equal to `echo {message} | base64`.
 - params (list): A list of strings which are keys found in either the query string or request body (supported content types: JSON), whose value is passed to the command (note: values from duplicate keys are concatenated with spaces).
 - return_stdout (bool): If the output of STDOUT should be returned when the command chain finishes successfully (default: true).
 - commands (list): A list of objects containing the definitions for the commands that need to be executed (at least one route is required).
+- variables (dict): A key-value combination where the value is a command of which the stdout is added to the params.
 
 #### Commands options
 
@@ -91,7 +92,6 @@ To run all tests, run `python tests.py`
 
 ## Roadmap
 
-- Add conditional logic in commands (by using the test command).
 - Add more accepted request body types.
 - Add files for accepted default responses.
 - Support to run commands as different users on the system.

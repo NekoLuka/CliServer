@@ -6,12 +6,21 @@ from local_types import CommandBody, MissingParameterError, ResponseEnum
 
 class Commander:
     def __init__(self, commands: List[CommandBody], return_stdout: bool = True,
-                 use_params: bool = True, params: Dict[str, str] = None):
+                 use_params: bool = True, params: Dict[str, str] = None, variables: Dict[str, str] = None):
         self.commands = commands
         self.return_stdout = return_stdout
-        self.params = params
+        self.params = params if params is not None else dict()
         self.use_params = use_params
         self.command_stack: List[CommandBody] = []
+        self.variables = variables if variables is not None else dict()
+
+    def parse_variables(self) -> Tuple[ResponseEnum, str]:
+        for key, value in self.variables.items():
+            status, evaluated_value = self.evaluate_variable(value)
+            if status != ResponseEnum.OK:
+                return status, evaluated_value
+            self.params[key] = evaluated_value
+        return ResponseEnum.OK, ""
 
     def get_correct_stdin(self, stdin_param: Union[str, None]) -> Union[str, None]:
         if self.use_params and stdin_param:
@@ -32,6 +41,9 @@ class Commander:
         return return_code == expected_return_code
 
     def execute_commands(self) -> Tuple[ResponseEnum, Union[str, None]]:
+        status, value = self.parse_variables()
+        if status != ResponseEnum.OK:
+            return status, value
         for command in self.commands:
             if command["condition"] is not None:
                 status, value = self.evaluate_condition(command["condition"])
@@ -76,3 +88,19 @@ class Commander:
         )
         _ = p.communicate()
         return ResponseEnum.OK, 0 if self.check_return_code(p.returncode, 0) else 1
+
+    def evaluate_variable(self, variable: str) -> Tuple[ResponseEnum, str]:
+        try:
+            variable = self.format_command(variable)
+        except MissingParameterError as e:
+            return ResponseEnum.InternalServerError, str(e)
+        p = subprocess.Popen(
+            variable,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            stdin=subprocess.PIPE,
+            text=True,
+            shell=True
+        )
+        stdout, _ = p.communicate()
+        return ResponseEnum.OK, stdout
