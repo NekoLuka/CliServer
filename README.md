@@ -64,6 +64,8 @@ The first command is equal to `echo {message} | base64`.
 - port (int): The port to listen on when using the builtin WSGI server (default: 9999).
 - routes (obj): An object with keys being the endpoint url, e.g '/hello' and as value the configuration of what the endpoint should do (at least one route is required).
 - default_responses (obj): An object with the keys being an HTTP response code and the values being what to put as the body when the status codes are used.
+- (upcoming) logfile (str): The location for the logfile (default: ./cliserver.log).
+- (upcoming) loglevel (str): The level at which should be logged (options: ERROR, WARNING, INFO) (default: WARNING).
 
 #### Routes options
 
@@ -81,6 +83,7 @@ The first command is equal to `echo {message} | base64`.
 - expected_return_code (int): The expected return code to check against if the command failed or not (default: 0).
 - return_stderr_on_err (bool): If the output of STDERR should be returned when the command fails (default: true).
 - condition (str): Add a condition that needs to be met to run the command. Use the 'test' command syntax.
+- (upcoming) log (str): Log a message with support for variables (always appended to log file independent of loglevel).
 
 #### Default response options
 
@@ -102,3 +105,5 @@ To run all tests, run `python tests.py`
 - Add static file serving
 - Add a killswitch to stop the command chain when a condition fails
 - Add a logging capability on a per command basis.
+- Logging.
+- On command basis custom logging.
