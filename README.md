@@ -95,9 +95,10 @@ To run all tests, run `python tests.py`
 - Add more accepted request body types.
 - Add files for accepted default responses.
 - Support to run commands as different users on the system.
-- Sanitize input to prevent command injections.
-- Add possible authentication to endpoints
+- Sanitize input to prevent command injections (make it better).
+- Add possible authentication to endpoints (jwt tokens with certificates, or a shared secret).
 - Add testing cases
 - Add ctrl+C exit functionality
 - Add static file serving
 - Add a killswitch to stop the command chain when a condition fails
+- Add a logging capability on a per command basis.
