@@ -62,6 +62,8 @@ The first command is equal to `echo {message} | base64`.
 
 - host (str): The hostname to listen on when using the builtin WSGI server (default: 0.0.0.0).
 - port (int): The port to listen on when using the builtin WSGI server (default: 9999).
+- (upcoming) logfile (str): The location of the file that logs are written to (default: ./cliserver.log).
+- (upcoming) loglevel (str): The loglevel that the application keeps logs from (excludes command logging) (options: ERROR, WARNING, INFO) (default: WARNING).
 - routes (obj): An object with keys being the endpoint url, e.g '/hello' and as value the configuration of what the endpoint should do (at least one route is required).
 - default_responses (obj): An object with the keys being an HTTP response code and the values being what to put as the body when the status codes are used.
 
@@ -81,8 +83,9 @@ The first command is equal to `echo {message} | base64`.
 - expected_return_code (int): The expected return code to check against if the command failed or not (default: 0).
 - return_stderr_on_err (bool): If the output of STDERR should be returned when the command fails (default: true).
 - condition (str): Add a condition that needs to be met to run the command. Use the 'test' command syntax.
+- (upcoming) log (str): Message to log in the log file (supports params).
 
-#### Default response options
+#### Default response options (upcoming)
 
 - type (string): A string literal that identifies to use the 'text' field to generate output for the code (required).
 - text (str): The text that is put in the response body (required).
@@ -97,8 +100,9 @@ To run all tests, run `python tests.py`
 - Support to run commands as different users on the system.
 - Sanitize input to prevent command injections (make it better).
 - Add possible authentication to endpoints (jwt tokens with certificates, or a shared secret).
-- Add testing cases
-- Add ctrl+C exit functionality
-- Add static file serving
-- Add a killswitch to stop the command chain when a condition fails
+- Add testing cases.
+- Add ctrl+C exit functionality.
+- Add static file serving.
+- Add a killswitch to stop the command chain when a condition fails.
+- Logging.
 - Add a logging capability on a per command basis.
